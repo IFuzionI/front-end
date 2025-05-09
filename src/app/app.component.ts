@@ -53,21 +53,13 @@ export class AppComponent {
   }
 
   UPDATE_tarefa(tarefaAserModificada: Tarefa) {
-  if (!tarefaAserModificada.descricao || tarefaAserModificada.descricao.trim() === '') {
-    this.mostrarErro = true;
-    return;
+    var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
+    var id = this.arrayDeTarefas[indice]._id;
+    this.http
+      .patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
+      .subscribe((resultado) => {
+        console.log(resultado);
+        this.READ_tarefas();
+      });
   }
-
-  this.mostrarErro = false;
-
-  var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
-  var id = this.arrayDeTarefas[indice]._id;
-
-  this.http
-    .patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
-    .subscribe((resultado) => {
-      console.log(resultado);
-      this.READ_tarefas();
-    });
-}
 }
