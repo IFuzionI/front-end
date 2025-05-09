@@ -20,22 +20,22 @@ export class AppComponent {
   }
 
   CREATE_tarefa() {
-    if (!this.descricaoNovaTarefa || this.descricaoNovaTarefa.trim() === '') {
-      this.mostrarErro = true;
-      return;
-    }
-
-    this.mostrarErro = false;
-    const novaTarefa = new Tarefa(this.descricaoNovaTarefa.trim(), false);
-
-    this.http
-      .post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa)
-      .subscribe((resultado) => {
-        console.log(resultado);
-        this.descricaoNovaTarefa = '';
-        this.READ_tarefas();
-      });
+  if (!this.descricaoNovaTarefa || this.descricaoNovaTarefa.trim() === '') {
+    this.mostrarErro = true;
+    return;
   }
+
+  this.mostrarErro = false;
+  const novaTarefa = new Tarefa(this.descricaoNovaTarefa.trim(), false);
+
+  this.http
+    .post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa)
+    .subscribe((resultado) => {
+      console.log(resultado);
+      this.descricaoNovaTarefa = ''; // limpa o campo
+      this.READ_tarefas();
+    });
+}
 
   DELETE_tarefa(tarefaASerRemovida: Tarefa) {
     const id = tarefaASerRemovida._id;
