@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  standalone: false,
   styleUrl: './app.component.css',
 })
 export class AppComponent {
@@ -13,31 +12,33 @@ export class AppComponent {
   arrayDeTarefas: Tarefa[] = [];
   apiURL: string;
   mostrarErro = false;
+  descricaoNovaTarefa: string = '';
 
   constructor(private http: HttpClient) {
     this.apiURL = 'https://apitarefasviccenzo243515-production.up.railway.app';
     this.READ_tarefas();
   }
 
-  CREATE_tarefa(descricaoNovaTarefa: string) {
-    if (!descricaoNovaTarefa || descricaoNovaTarefa.trim() === '') {
+  CREATE_tarefa() {
+    if (!this.descricaoNovaTarefa || this.descricaoNovaTarefa.trim() === '') {
       this.mostrarErro = true;
       return;
     }
 
     this.mostrarErro = false;
-    var novaTarefa = new Tarefa(descricaoNovaTarefa, false);
+    const novaTarefa = new Tarefa(this.descricaoNovaTarefa.trim(), false);
+
     this.http
       .post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa)
       .subscribe((resultado) => {
         console.log(resultado);
+        this.descricaoNovaTarefa = '';
         this.READ_tarefas();
       });
   }
 
   DELETE_tarefa(tarefaASerRemovida: Tarefa) {
-    var indice = this.arrayDeTarefas.indexOf(tarefaASerRemovida);
-    var id = this.arrayDeTarefas[indice]._id;
+    const id = tarefaASerRemovida._id;
     this.http
       .delete<Tarefa>(`${this.apiURL}/api/delete/${id}`)
       .subscribe((resultado) => {
@@ -53,8 +54,14 @@ export class AppComponent {
   }
 
   UPDATE_tarefa(tarefaAserModificada: Tarefa) {
-    var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
-    var id = this.arrayDeTarefas[indice]._id;
+    if (!tarefaAserModificada.descricao || tarefaAserModificada.descricao.trim() === '') {
+      this.mostrarErro = true;
+      return;
+    }
+
+    this.mostrarErro = false;
+    const id = tarefaAserModificada._id;
+
     this.http
       .patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
       .subscribe((resultado) => {
