@@ -15,7 +15,7 @@ export class AppComponent {
   mostrarErro = false;
 
   constructor(private http: HttpClient) {
-    this.apiURL = 'https://apitarefaslucas235182-production.up.railway.app';
+    this.apiURL = 'https://apitarefasviccenzo243515-production.up.railway.app';
     this.READ_tarefas();
   }
 
@@ -53,13 +53,21 @@ export class AppComponent {
   }
 
   UPDATE_tarefa(tarefaAserModificada: Tarefa) {
-    var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
-    var id = this.arrayDeTarefas[indice]._id;
-    this.http
-      .patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
-      .subscribe((resultado) => {
-        console.log(resultado);
-        this.READ_tarefas();
-      });
+  if (!tarefaAserModificada.descricao || tarefaAserModificada.descricao.trim() === '') {
+    this.mostrarErro = true;
+    return;
   }
+
+  this.mostrarErro = false;
+
+  var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
+  var id = this.arrayDeTarefas[indice]._id;
+
+  this.http
+    .patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
+    .subscribe((resultado) => {
+      console.log(resultado);
+      this.READ_tarefas();
+    });
+}
 }
