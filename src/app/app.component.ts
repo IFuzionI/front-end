@@ -18,7 +18,7 @@ export class AppComponent {
   mostrarErro = false;
 
   constructor(private http: HttpClient) {
-    this.apiURL = 'http://localhost:3000';
+    this.apiURL = 'https://back-end-6ieu.onrender.com';
     this.READ_tarefas();
   }
 
